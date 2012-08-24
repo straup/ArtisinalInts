@@ -100,3 +100,33 @@ def iter_brooklyn_integers():
     while True:
         integer, href = get_brooklyn_integer()
         yield integer
+
+def get_london_integer():
+    ''' Ask London Integers for a single integer.
+    
+        Returns a tuple with number.
+    '''
+    body = None
+    head = {}
+    conn = HTTPConnection('api.londonintegers.com', 80)
+    conn.request('GET', '/london.integers.create', body, head)
+
+    resp = conn.getresponse()
+    
+    if resp.status not in range(200, 299):
+        raise Exception('Non-2XX response code from London: %d' % resp.status)
+    
+    data = loads(resp.read())
+    value = data['integer']
+    
+    return value,
+
+def iter_london_integers():
+    ''' Generate a stream of London Integers, forever.
+    
+        Returns an iterator:
+        http://docs.python.org/library/stdtypes.html#typeiter.
+    '''
+    while True:
+        integer, href = get_london_integer()
+        yield integer
